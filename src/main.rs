@@ -165,15 +165,5 @@ fn main() -> GameResult {
     
     let (mut ctx, event_loop) = cb.build()?;
     let mut state = GameState::new(&ctx)?;
-    event_loop.run(move |_event, _window_target, control_flow| {
-        *control_flow = ggez::event::ControlFlow::Poll;
-        if let Err(e) = state.update(&mut ctx) {
-            println!("Error updating game: {}", e);
-            *control_flow = ggez::event::ControlFlow::Exit;
-        }
-        if let Err(e) = state.draw(&mut ctx) {
-            println!("Error drawing game: {}", e);
-            *control_flow = ggez::event::ControlFlow::Exit;
-        }
-    })
+    ggez::event::run(ctx, event_loop, state)
 }
