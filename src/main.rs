@@ -6,7 +6,9 @@ use ggez::conf::{WindowMode, WindowSetup};
 use glam::Vec2;
 
 mod terrain;
+mod player;
 use terrain::Terrain;
+use player::Player;
 
 // Constants from the Processing version
 const WINDOW_WIDTH: f32 = 640.0;
@@ -28,6 +30,7 @@ struct GameState {
     title_text: graphics::Image,
     terrain: Terrain,
     mouse_pos: Vec2,
+    player: Player,
 }
 
 impl GameState {
@@ -48,6 +51,7 @@ impl GameState {
                 4.0 * SCALE_X
             ),
             mouse_pos: Vec2::new(0.0, WINDOW_HEIGHT/6.0),
+            player: Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0),
         })
     }
 }
@@ -88,6 +92,7 @@ impl EventHandler for GameState {
             },
             1 => { // Playing
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
+                self.player.draw(ctx, &mut canvas)?;
             },
             2 => { // Game over
                 // Draw game over screen
