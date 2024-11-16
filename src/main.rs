@@ -7,8 +7,10 @@ use glam::Vec2;
 
 mod terrain;
 mod player;
+mod background;
 use terrain::Terrain;
 use player::Player;
+use background::Background;
 
 // Constants from the Processing version
 const WINDOW_WIDTH: f32 = 640.0;
@@ -29,6 +31,7 @@ struct GameState {
     collision_counter_on: bool,
     title_text: graphics::Image,
     terrain: Terrain,
+    background: Background,
     mouse_pos: Vec2,
     player: Player,
 }
@@ -50,6 +53,7 @@ impl GameState {
                 WINDOW_HEIGHT - WINDOW_HEIGHT/6.0,
                 4.0 * SCALE_X
             ),
+            background: Background::new(WINDOW_WIDTH, WINDOW_HEIGHT),
             mouse_pos: Vec2::new(0.0, WINDOW_HEIGHT/6.0),
             player: Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0),
         })
@@ -121,6 +125,8 @@ impl EventHandler for GameState {
                 canvas.draw(&self.title_text, params);
             },
             1 => { // Playing
+                self.background.update(self.speed_x, self.ascent_speed);
+                self.background.draw(ctx, &mut canvas)?;
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
                 self.player.draw(ctx, &mut canvas)?;
             },
