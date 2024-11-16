@@ -74,7 +74,7 @@ impl Player {
         let draw_param = DrawParam::default()
             .dest(self.pos)
             .rotation(rotation)
-            .offset(Vec2::new(0.5, 0.5));
+            .offset(Vec2::new(0.5, 1.0));  // Change y offset to 1.0 to use bottom as anchor
 
         // Draw body parts
         let body_main = Mesh::new_rectangle(
