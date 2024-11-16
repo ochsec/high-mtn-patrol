@@ -162,8 +162,8 @@ fn main() -> GameResult {
         .window_mode(WindowMode::default()
             .dimensions(WINDOW_WIDTH, WINDOW_HEIGHT));
     
-    let (ctx, event_loop) = cb.build()?;
-    let state = GameState::new(&ctx)?;
+    let (mut ctx, event_loop) = cb.build()?;
+    let mut state = GameState::new(&ctx)?;
     event_loop.run(move |_event, _window_target, control_flow| {
         *control_flow = ggez::event::ControlFlow::Poll;
         if let Err(e) = state.update(&mut ctx) {
