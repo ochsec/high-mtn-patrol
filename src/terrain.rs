@@ -42,15 +42,13 @@ impl Bar {
             window_height - self.pos.y
         );
 
-        canvas.draw(
-            &graphics::Mesh::new_rectangle(
-                ctx,
-                graphics::DrawMode::fill(),
-                bar_rect,
-                Color::from_rgb(92, 226, 0), // #5CE200
-            )?,
-            DrawParam::default(),
-        );
+        let mesh = graphics::Mesh::new_rectangle(
+            ctx,
+            graphics::DrawMode::fill(),
+            bar_rect,
+            Color::from_rgb(92, 226, 0), // #5CE200
+        )?;
+        canvas.draw(&mesh, DrawParam::default());
         Ok(())
     }
 }
