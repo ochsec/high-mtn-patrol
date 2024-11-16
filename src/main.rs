@@ -41,7 +41,7 @@ impl GameState {
             gravity: 0.4 * SCALE_Y,
             ascent_speed: 0.0,
             collision_counter_on: false,
-            title_text: graphics::Image::from_path(ctx, "/resources/TitleText.png")?,
+            title_text: graphics::Image::from_path(ctx, "/TitleText.png")?,
             terrain: Terrain::new(
                 WINDOW_WIDTH,
                 WINDOW_HEIGHT - WINDOW_HEIGHT/6.0,
@@ -158,6 +158,7 @@ impl EventHandler for GameState {
 
 fn main() -> GameResult {
     let cb = ggez::ContextBuilder::new("high-mountain-trucker", "you")
+        .add_resource_path("resources")  // Add this line
         .window_setup(WindowSetup::default().title("High Mountain Trucker"))
         .window_mode(WindowMode::default()
             .dimensions(WINDOW_WIDTH, WINDOW_HEIGHT));
