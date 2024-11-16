@@ -87,7 +87,7 @@ impl EventHandler for GameState {
                 canvas.draw(&self.title_text, params);
             },
             1 => { // Playing
-                self.terrain.draw(&mut canvas, WINDOW_HEIGHT)?;
+                self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
             },
             2 => { // Game over
                 // Draw game over screen

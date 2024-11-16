@@ -1,4 +1,4 @@
-use ggez::GameResult;
+use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect};
 use glam::Vec2;
 
@@ -34,7 +34,7 @@ impl Bar {
         }
     }
 
-    pub fn draw(&self, canvas: &mut graphics::Canvas, window_height: f32) -> GameResult {
+    pub fn draw(&self, ctx: &mut Context, canvas: &mut graphics::Canvas, window_height: f32) -> GameResult {
         let bar_rect = Rect::new(
             self.pos.x - self.width/2.0,
             self.pos.y,
@@ -93,9 +93,9 @@ impl Terrain {
         }
     }
 
-    pub fn draw(&self, canvas: &mut graphics::Canvas, window_height: f32) -> GameResult {
+    pub fn draw(&self, ctx: &mut Context, canvas: &mut graphics::Canvas, window_height: f32) -> GameResult {
         for bar in &self.bars {
-            bar.draw(canvas, window_height)?;
+            bar.draw(ctx, canvas, window_height)?;
         }
         Ok(())
     }
