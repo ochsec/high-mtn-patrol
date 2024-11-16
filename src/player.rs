@@ -20,7 +20,7 @@ impl Player {
             height: 30.0,
             velocity: Vec2::ZERO,
             on_ground: false,
-            jump_speed: -400.0,
+            jump_speed: -500.0,
             move_speed: 200.0,
         }
     }

@@ -41,7 +41,7 @@ impl GameState {
             speed_x: 4.0 * SCALE_X,
             speed_x_delta: 4.0 * SCALE_X,
             speed_y: 1.0 * SCALE_Y,
-            gravity: 0.4 * SCALE_Y,
+            gravity: 15.0 * SCALE_Y,
             ascent_speed: 0.0,
             collision_counter_on: false,
             title_text: graphics::Image::from_path(ctx, "/TitleText.png")?,
