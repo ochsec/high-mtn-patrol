@@ -7,6 +7,9 @@ pub struct Player {
     pub width: f32,
     pub height: f32,
     pub velocity: Vec2,
+    pub on_ground: bool,
+    pub jump_speed: f32,
+    pub move_speed: f32,
 }
 
 impl Player {
@@ -16,11 +19,39 @@ impl Player {
             width: 30.0,
             height: 30.0,
             velocity: Vec2::ZERO,
+            on_ground: false,
+            jump_speed: -400.0,
+            move_speed: 200.0,
         }
     }
 
-    pub fn update(&mut self, dt: f32) {
+    pub fn update(&mut self, dt: f32, gravity: f32) {
+        // Apply gravity
+        if !self.on_ground {
+            self.velocity.y += gravity;
+        }
+        
+        // Update position
         self.pos += self.velocity * dt;
+    }
+
+    pub fn jump(&mut self) {
+        if self.on_ground {
+            self.velocity.y = self.jump_speed;
+            self.on_ground = false;
+        }
+    }
+
+    pub fn move_left(&mut self) {
+        self.velocity.x = -self.move_speed;
+    }
+
+    pub fn move_right(&mut self) {
+        self.velocity.x = self.move_speed;
+    }
+
+    pub fn stop_horizontal(&mut self) {
+        self.velocity.x = 0.0;
     }
 
     pub fn draw(&self, ctx: &mut Context, canvas: &mut graphics::Canvas) -> GameResult {

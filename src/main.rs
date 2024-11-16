@@ -57,16 +57,46 @@ impl GameState {
 }
 
 impl EventHandler for GameState {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult {
+    fn update(&mut self, ctx: &mut Context) -> GameResult {
         match self.state {
             0 => {}, // Title screen
             1 => {   // Playing
+                // Update terrain
                 self.terrain.update(
                     self.mouse_pos,
                     self.speed_x,
                     self.ascent_speed,
                     WINDOW_WIDTH
                 );
+
+                // Update player with gravity
+                self.player.update(ctx.time.delta().as_secs_f32(), self.gravity);
+
+                // Check for keyboard input
+                let keyboard = &ctx.keyboard;
+                
+                if keyboard.is_key_pressed(KeyCode::Space) {
+                    self.player.jump();
+                }
+                
+                if keyboard.is_key_pressed(KeyCode::Left) {
+                    self.player.move_left();
+                } else if keyboard.is_key_pressed(KeyCode::Right) {
+                    self.player.move_right();
+                } else {
+                    self.player.stop_horizontal();
+                }
+
+                // Check collision with terrain
+                if let Some(terrain_height) = self.terrain.get_height_at(self.player.pos.x) {
+                    if self.player.pos.y + self.player.height/2.0 > terrain_height {
+                        self.player.pos.y = terrain_height - self.player.height/2.0;
+                        self.player.velocity.y = 0.0;
+                        self.player.on_ground = true;
+                    } else {
+                        self.player.on_ground = false;
+                    }
+                }
             },
             2 => {}, // Game over
             _ => {},
@@ -123,7 +153,7 @@ impl EventHandler for GameState {
         _repeated: bool,
     ) -> GameResult {
         match input.keycode {
-            Some(KeyCode::Space) => {
+            Some(KeyCode::Return) => {
                 if self.state == 0 {
                     self.state = 1;
                 }
