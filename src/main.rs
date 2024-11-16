@@ -1,6 +1,6 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color};
-use ggez::event::{self, EventHandler};
+use ggez::event::EventHandler;
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::conf::{WindowMode, WindowSetup};
 use glam::Vec2;
@@ -164,5 +164,15 @@ fn main() -> GameResult {
     
     let (ctx, event_loop) = cb.build()?;
     let state = GameState::new(&ctx)?;
-    event_loop.run(ctx, state)
+    event_loop.run(move |_event, _window_target, control_flow| {
+        *control_flow = ggez::event::ControlFlow::Poll;
+        if let Err(e) = state.update(&mut ctx) {
+            println!("Error updating game: {}", e);
+            *control_flow = ggez::event::ControlFlow::Exit;
+        }
+        if let Err(e) = state.draw(&mut ctx) {
+            println!("Error drawing game: {}", e);
+            *control_flow = ggez::event::ControlFlow::Exit;
+        }
+    })
 }

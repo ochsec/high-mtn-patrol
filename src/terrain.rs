@@ -1,4 +1,4 @@
-use ggez::{Context, GameResult};
+use ggez::GameResult;
 use ggez::graphics::{self, Color, DrawParam, Rect};
 use glam::Vec2;
 
@@ -44,7 +44,7 @@ impl Bar {
 
         canvas.draw(
             &graphics::Mesh::new_rectangle(
-                canvas.gfx(),
+                canvas.ctx(),
                 graphics::DrawMode::fill(),
                 bar_rect,
                 Color::from_rgb(92, 226, 0), // #5CE200
