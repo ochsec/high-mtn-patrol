@@ -1,12 +1,12 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect, Mesh};
-use ggez::glam::Vec2;
+use ggez::glam::Vec2 as GgezVec2;
 
 pub struct Player {
-    pub pos: Vec2,
+    pub pos: GgezVec2,
     pub width: f32,
     pub height: f32,
-    pub velocity: Vec2,
+    pub velocity: GgezVec2,
     pub on_ground: bool,
     pub jump_speed: f32,
     pub move_speed: f32,
@@ -20,10 +20,10 @@ pub struct Player {
 impl Player {
     pub fn new(x: f32, y: f32) -> Self {
         Player {
-            pos: Vec2::new(x, y),
+            pos: GgezVec2::new(x, y),
             width: 48.0,
             height: 30.0,
-            velocity: Vec2::ZERO,
+            velocity: GgezVec2::ZERO,
             on_ground: false,
             jump_speed: -500.0,
             move_speed: 200.0,
@@ -115,7 +115,7 @@ impl Player {
         let draw_param = DrawParam::default()
             .dest(self.pos)
             .rotation(rotation)
-            .offset(Vec2::new(0.5, 1.0));  // Change y offset to 1.0 to use bottom as anchor
+            .offset(GgezVec2::new(0.5, 1.0));  // Change y offset to 1.0 to use bottom as anchor
 
         // Draw body parts
         let body_main = Mesh::new_rectangle(
@@ -150,7 +150,7 @@ impl Player {
         let wheel1 = Mesh::new_circle(
             ctx,
             graphics::DrawMode::fill(),
-            Vec2::new(14.0, 20.0),
+            GgezVec2::new(14.0, 20.0),
             10.0,
             0.1,
             wheel_color,
@@ -159,7 +159,7 @@ impl Player {
         let wheel2 = Mesh::new_circle(
             ctx,
             graphics::DrawMode::fill(),
-            Vec2::new(38.0, 20.0),
+            GgezVec2::new(38.0, 20.0),
             10.0,
             0.1,
             wheel_color,

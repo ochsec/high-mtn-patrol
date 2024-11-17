@@ -3,7 +3,7 @@ use ggez::graphics::{self, Color, DrawParam};
 use ggez::event::EventHandler;
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::conf::{WindowMode, WindowSetup};
-use ggez::glam::Vec2;
+use ggez::glam::Vec2 as GgezVec2;
 
 mod terrain;
 mod player;
@@ -60,7 +60,7 @@ impl GameState {
                 4.0 * SCALE_X
             ),
             background: Background::new(WINDOW_WIDTH, WINDOW_HEIGHT),
-            mouse_pos: Vec2::new(0.0, WINDOW_HEIGHT/6.0),
+            mouse_pos: GgezVec2::new(0.0, WINDOW_HEIGHT/6.0),
             player: Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0),
             boulders: Vec::new(),
             pickups: Vec::new(),
@@ -185,8 +185,8 @@ impl EventHandler for GameState {
         match self.state {
             0 => { // Title screen
                 let params = graphics::DrawParam::default()
-                    .dest(Vec2::new(0.0, WINDOW_HEIGHT/4.0))
-                    .scale(Vec2::new(
+                    .dest(GgezVec2::new(0.0, WINDOW_HEIGHT/4.0))
+                    .scale(GgezVec2::new(
                         WINDOW_WIDTH/self.title_text.width() as f32,
                         SCALE_Y
                     ));
@@ -201,7 +201,7 @@ impl EventHandler for GameState {
                 let score_text = format!("Score: {}", self.score);
                 let score_display = graphics::Text::new(score_text);
                 canvas.draw(&score_display, DrawParam::default()
-                    .dest(Vec2::new(20.0, 20.0))
+                    .dest(GgezVec2::new(20.0, 20.0))
                     .color(Color::RED));
 
                 // Update and draw boulders
@@ -255,11 +255,11 @@ impl EventHandler for GameState {
                 let score_text = graphics::Text::new(format!("Final Score: {}", self.score));
                 
                 canvas.draw(&game_over, DrawParam::default()
-                    .dest(Vec2::new(WINDOW_WIDTH/2.0 - 100.0, WINDOW_HEIGHT/3.0))
+                    .dest(GgezVec2::new(WINDOW_WIDTH/2.0 - 100.0, WINDOW_HEIGHT/3.0))
                     .color(Color::RED));
                     
                 canvas.draw(&score_text, DrawParam::default()
-                    .dest(Vec2::new(WINDOW_WIDTH/2.0 - 80.0, WINDOW_HEIGHT/2.0))
+                    .dest(GgezVec2::new(WINDOW_WIDTH/2.0 - 80.0, WINDOW_HEIGHT/2.0))
                     .color(Color::WHITE));
             },
             _ => {},
@@ -277,7 +277,7 @@ impl EventHandler for GameState {
         _dx: f32,
         _dy: f32,
     ) -> GameResult {
-        self.mouse_pos = Vec2::new(x, y);
+        self.mouse_pos = GgezVec2::new(x, y);
         Ok(())
     }
 
