@@ -70,7 +70,7 @@ impl GameState {
         Ok(state)
     }
 
-    fn reset_game_environment(&mut self, ctx: &Context) -> GameResult {
+    fn reset_game_environment(&mut self, _ctx: &Context) -> GameResult {
         // Reset boulders
         self.boulders.clear();
         for _ in 0..2 {
