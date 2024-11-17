@@ -1,6 +1,6 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect, Canvas};
-use glam::Vec2;
+use ggez::glam::Vec2;
 use rand::Rng;
 
 pub enum PickupType {

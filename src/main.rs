@@ -36,7 +36,7 @@ struct GameState {
     title_text: graphics::Image,
     terrain: Terrain,
     background: Background,
-    mouse_pos: Vec2,
+    mouse_pos: GgezVec2,
     player: Player,
     boulders: Vec<Boulder>,
     pickups: Vec<Pickup>,

@@ -1,6 +1,6 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect};
-use glam::Vec2;
+use ggez::glam::Vec2;
 use crate::player::Player;
 use crate::WINDOW_WIDTH;
 
