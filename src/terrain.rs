@@ -2,6 +2,7 @@ use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect};
 use glam::Vec2;
 use crate::player::Player;
+use crate::WINDOW_WIDTH;
 
 pub struct Bar {
     pub pos: Vec2,
@@ -98,7 +99,7 @@ impl Terrain {
             
             // Wrap bars around when they go off screen
             if bar.pos.x < -2.0 * self.bar_width {
-                bar.pos.x = window_width;
+                bar.pos.x = WINDOW_WIDTH;
                 bar.pos.y = mouse_pos.y;
             }
         }
