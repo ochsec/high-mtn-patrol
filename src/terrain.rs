@@ -38,10 +38,10 @@ impl Bar {
         // Update player terrain tracking
         let check_zone = WINDOW_WIDTH / 6.0;
         
-        if self.pos.x < check_zone && self.pos.x > check_zone - window_width/20.0 {
+        if self.pos.x < check_zone && self.pos.x > check_zone - WINDOW_WIDTH/20.0 {
             player.set_prev_bar_height(self.pos.y);
         }
-        if self.pos.x > check_zone && self.pos.x < check_zone + window_width/20.0 {
+        if self.pos.x > check_zone && self.pos.x < check_zone + WINDOW_WIDTH/20.0 {
             player.set_bar_height(self.pos.y);
         }
     }

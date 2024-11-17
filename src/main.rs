@@ -1,5 +1,5 @@
 use ggez::{Context, GameResult};
-use ggez::graphics::{self, Color, Text, Font, DrawParam};
+use ggez::graphics::{self, Color, DrawParam};
 use ggez::event::EventHandler;
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::conf::{WindowMode, WindowSetup};
@@ -167,8 +167,8 @@ impl EventHandler for GameState {
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
 
                 // Draw score
-                let font = graphics::Font::new(ctx, "/zerovelo.ttf")?;
-                let score_display = graphics::Text::new((format!("Score: {}", self.score), font, 32.0));
+                let score_text = format!("Score: {}", self.score);
+                let score_display = graphics::Text::new(score_text);
                 canvas.draw(&score_display, DrawParam::default()
                     .dest(Vec2::new(20.0, 20.0))
                     .color(Color::RED));
@@ -220,9 +220,8 @@ impl EventHandler for GameState {
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
                 
                 // Draw game over text
-                let font = graphics::Font::new(ctx, "/zerovelo.ttf")?;
-                let game_over = graphics::Text::new(("Game Over", font, 48.0));
-                let score_text = graphics::Text::new((format!("Final Score: {}", self.score), font, 32.0));
+                let game_over = graphics::Text::new("Game Over");
+                let score_text = graphics::Text::new(format!("Final Score: {}", self.score));
                 
                 canvas.draw(&game_over, DrawParam::default()
                     .dest(Vec2::new(WINDOW_WIDTH/2.0 - 100.0, WINDOW_HEIGHT/3.0))
