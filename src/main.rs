@@ -128,8 +128,11 @@ impl EventHandler for GameState {
                     self.player.stop_horizontal();
                 }
 
-                // Check collision with terrain
-                if let Some(terrain_height) = self.terrain.get_height_at(self.player.pos.x) {
+                // Check collisions
+                if self.player.pos.y > WINDOW_HEIGHT {
+                    self.collision_counter_on = true;
+                    self.state = 2;  // Game over
+                } else if let Some(terrain_height) = self.terrain.get_height_at(self.player.pos.x) {
                     if self.player.pos.y + 30.0 > terrain_height {  // 30.0 is the distance to bottom of wheels
                         self.player.pos.y = terrain_height - 30.0;  // Align bottom of wheels with terrain
                         self.player.velocity.y = 0.0;

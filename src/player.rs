@@ -13,6 +13,8 @@ pub struct Player {
     last_y: f32,
     bar_height: f32,
     prev_bar_height: f32,
+    terrain_positions: [f32; 4],  // Track last 4 terrain positions
+    speed_y: f32,
 }
 
 impl Player {
@@ -28,15 +30,31 @@ impl Player {
             last_y: y,
             bar_height: y,
             prev_bar_height: y,
+            terrain_positions: [y; 4],
+            speed_y: 1.0,
         }
     }
 
     pub fn update(&mut self, dt: f32, gravity: f32, speed_x: &mut f32) {
         self.last_y = self.pos.y;
         
-        // Apply gravity
+        // Update terrain position history
+        for i in (1..4).rev() {
+            self.terrain_positions[i] = self.terrain_positions[i-1];
+        }
+        self.terrain_positions[0] = self.pos.y;
+
+        // Apply gravity and terrain following
         if !self.on_ground {
             self.velocity.y += gravity;
+        } else {
+            if self.pos.y < self.bar_height {
+                self.pos.y += self.speed_y;
+                self.speed_y += gravity;
+            } else {
+                self.pos.y = self.bar_height;
+                self.speed_y = 1.0;
+            }
         }
         
         // Update position
@@ -87,10 +105,14 @@ impl Player {
 
     pub fn draw(&self, ctx: &mut Context, canvas: &mut graphics::Canvas) -> GameResult {
         // Calculate rotation based on vertical movement
+        // Calculate averages for rotation
+        let avg0 = (self.terrain_positions[0..3].iter().sum::<f32>()) / 3.0;
+        let avg1 = (self.terrain_positions[1..4].iter().sum::<f32>()) / 3.0;
+        
         let rotation = if self.pos.y > self.last_y {
             -2.0 * std::f32::consts::PI / (self.pos.y / self.last_y)
         } else {
-            0.0
+            -2.0 * std::f32::consts::PI / (avg0 / avg1)
         };
 
         // Colors from the Processing version
