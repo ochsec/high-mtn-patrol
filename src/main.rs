@@ -8,9 +8,11 @@ use glam::Vec2;
 mod terrain;
 mod player;
 mod background;
+mod boulder;
 use terrain::Terrain;
 use player::Player;
 use background::Background;
+use boulder::Boulder;
 
 // Constants from the Processing version
 const WINDOW_WIDTH: f32 = 640.0;
@@ -34,6 +36,7 @@ struct GameState {
     background: Background,
     mouse_pos: Vec2,
     player: Player,
+    boulders: Vec<Boulder>,
 }
 
 impl GameState {
@@ -56,6 +59,17 @@ impl GameState {
             background: Background::new(WINDOW_WIDTH, WINDOW_HEIGHT),
             mouse_pos: Vec2::new(0.0, WINDOW_HEIGHT/6.0),
             player: Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0),
+            boulders: {
+                let mut boulders = Vec::new();
+                for _ in 0..2 {
+                    boulders.push(Boulder::new(
+                        WINDOW_WIDTH,
+                        rand::random::<f32>() * WINDOW_HEIGHT * 0.75,
+                        WINDOW_WIDTH
+                    ));
+                }
+                boulders
+            },
         })
     }
 }
@@ -128,7 +142,29 @@ impl EventHandler for GameState {
                 self.background.update(self.speed_x, self.ascent_speed);
                 self.background.draw(ctx, &mut canvas)?;
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
-                self.player.draw(ctx, &mut canvas)?;
+
+                // Update and draw boulders
+                for boulder in &mut self.boulders {
+                    boulder.update(self.speed_x, self.ascent_speed);
+                    
+                    // Check if boulder is off screen
+                    if boulder.pos.x + boulder.width < 0.0 {
+                        boulder.reposition(WINDOW_WIDTH, WINDOW_HEIGHT);
+                    }
+                    
+                    // Check collision with player
+                    if boulder.collides_with_player(self.player.pos, self.player.width, self.player.height) {
+                        self.collision_counter_on = true;
+                        self.state = 2; // Game over
+                    }
+                    
+                    boulder.draw(ctx, &mut canvas)?;
+                }
+
+                // Only draw player if not collided
+                if !self.collision_counter_on {
+                    self.player.draw(ctx, &mut canvas)?;
+                }
             },
             2 => { // Game over
                 // Draw game over screen
