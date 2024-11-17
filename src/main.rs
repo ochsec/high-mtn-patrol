@@ -9,10 +9,12 @@ mod terrain;
 mod player;
 mod background;
 mod boulder;
+mod pickup;
 use terrain::Terrain;
 use player::Player;
 use background::Background;
 use boulder::Boulder;
+use pickup::{Pickup, PickupType};
 
 // Constants from the Processing version
 const WINDOW_WIDTH: f32 = 640.0;
@@ -37,6 +39,7 @@ struct GameState {
     mouse_pos: Vec2,
     player: Player,
     boulders: Vec<Boulder>,
+    pickups: Vec<Pickup>,
 }
 
 impl GameState {
@@ -69,6 +72,26 @@ impl GameState {
                     ));
                 }
                 boulders
+            },
+            pickups: {
+                let mut pickups = Vec::new();
+                // Add coins
+                for i in 0..2 {
+                    pickups.push(Pickup::new(
+                        WINDOW_WIDTH + i as f32 * 200.0,
+                        rand::random::<f32>() * WINDOW_HEIGHT,
+                        PickupType::Coin
+                    ));
+                }
+                // Add gems
+                for i in 0..2 {
+                    pickups.push(Pickup::new(
+                        WINDOW_WIDTH + i as f32 * 300.0,
+                        rand::random::<f32>() * WINDOW_HEIGHT,
+                        PickupType::Gem
+                    ));
+                }
+                pickups
             },
         })
     }
@@ -159,6 +182,25 @@ impl EventHandler for GameState {
                     }
                     
                     boulder.draw(ctx, &mut canvas)?;
+                }
+
+                // Update and draw pickups
+                for pickup in &mut self.pickups {
+                    pickup.update(self.speed_x, self.ascent_speed);
+                    
+                    // Check if pickup is off screen
+                    if pickup.pos.x + pickup.width < 0.0 {
+                        pickup.reposition(WINDOW_WIDTH, WINDOW_HEIGHT);
+                    }
+                    
+                    // Check collision with player
+                    if pickup.collides_with_player(self.player.pos, self.player.width, self.player.height) {
+                        pickup.collected = true;
+                        self.score += pickup.value;
+                        self.speed_x += 5.0 * SCALE_X;
+                    }
+                    
+                    pickup.draw(ctx, &mut canvas)?;
                 }
 
                 // Only draw player if not collided
