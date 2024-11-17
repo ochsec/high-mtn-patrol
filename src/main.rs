@@ -1,5 +1,5 @@
 use ggez::{Context, GameResult};
-use ggez::graphics::{self, Color};
+use ggez::graphics::{self, Color, Text, Font, DrawParam};
 use ggez::event::EventHandler;
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::conf::{WindowMode, WindowSetup};
