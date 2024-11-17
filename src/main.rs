@@ -120,7 +120,6 @@ struct GameState {
 
         Ok(())
     }
-}
 
 impl EventHandler for GameState {
     fn update(&mut self, ctx: &mut Context) -> GameResult {
