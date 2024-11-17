@@ -47,14 +47,6 @@ impl Player {
         // Apply gravity and terrain following
         if !self.on_ground {
             self.velocity.y += gravity;
-        } else {
-            if self.pos.y < self.bar_height {
-                self.pos.y += self.speed_y;
-                self.speed_y += gravity;
-            } else {
-                self.pos.y = self.bar_height;
-                self.speed_y = 1.0;
-            }
         }
         
         // Update position
