@@ -3,7 +3,7 @@ use ggez::graphics::{self, Color, DrawParam};
 use ggez::event::EventHandler;
 use ggez::input::keyboard::{KeyCode, KeyInput};
 use ggez::conf::{WindowMode, WindowSetup};
-use glam::Vec2;
+use ggez::glam::Vec2;
 
 mod terrain;
 mod player;

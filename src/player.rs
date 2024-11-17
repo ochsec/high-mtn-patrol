@@ -1,6 +1,6 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect, Mesh};
-use glam::Vec2;
+use ggez::glam::Vec2;
 
 pub struct Player {
     pub pos: Vec2,
