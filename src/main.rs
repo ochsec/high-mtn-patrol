@@ -42,9 +42,8 @@ struct GameState {
     pickups: Vec<Pickup>,
 }
 
-impl GameState {
     fn new(ctx: &Context) -> GameResult<GameState> {
-        Ok(GameState {
+        let mut state = GameState {
             state: 0,
             score: 0,
             speed_x: 4.0 * SCALE_X,
@@ -62,38 +61,64 @@ impl GameState {
             background: Background::new(WINDOW_WIDTH, WINDOW_HEIGHT),
             mouse_pos: Vec2::new(0.0, WINDOW_HEIGHT/6.0),
             player: Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0),
-            boulders: {
-                let mut boulders = Vec::new();
-                for _ in 0..2 {
-                    boulders.push(Boulder::new(
-                        WINDOW_WIDTH,
-                        rand::random::<f32>() * WINDOW_HEIGHT * 0.75,
-                        WINDOW_WIDTH
-                    ));
-                }
-                boulders
-            },
-            pickups: {
-                let mut pickups = Vec::new();
-                // Add coins
-                for i in 0..2 {
-                    pickups.push(Pickup::new(
-                        WINDOW_WIDTH + i as f32 * 200.0,
-                        rand::random::<f32>() * WINDOW_HEIGHT,
-                        PickupType::Coin
-                    ));
-                }
-                // Add gems
-                for i in 0..2 {
-                    pickups.push(Pickup::new(
-                        WINDOW_WIDTH + i as f32 * 300.0,
-                        rand::random::<f32>() * WINDOW_HEIGHT,
-                        PickupType::Gem
-                    ));
-                }
-                pickups
-            },
-        })
+            boulders: Vec::new(),
+            pickups: Vec::new(),
+        };
+        
+        state.reset_game_environment(ctx)?;
+        Ok(state)
+    }
+
+    fn reset_game_environment(&mut self, ctx: &Context) -> GameResult {
+        // Reset boulders
+        self.boulders.clear();
+        for _ in 0..2 {
+            self.boulders.push(Boulder::new(
+                WINDOW_WIDTH,
+                rand::random::<f32>() * WINDOW_HEIGHT * 0.75,
+                WINDOW_WIDTH
+            ));
+        }
+
+        // Reset pickups
+        self.pickups.clear();
+        // Add coins
+        for i in 0..2 {
+            self.pickups.push(Pickup::new(
+                WINDOW_WIDTH + i as f32 * 200.0,
+                rand::random::<f32>() * WINDOW_HEIGHT,
+                PickupType::Coin
+            ));
+        }
+        // Add gems
+        for i in 0..2 {
+            self.pickups.push(Pickup::new(
+                WINDOW_WIDTH + i as f32 * 300.0,
+                rand::random::<f32>() * WINDOW_HEIGHT,
+                PickupType::Gem
+            ));
+        }
+
+        // Reset player position
+        self.player = Player::new(WINDOW_WIDTH/4.0, WINDOW_HEIGHT/2.0);
+
+        // Reset terrain
+        self.terrain = Terrain::new(
+            WINDOW_WIDTH,
+            WINDOW_HEIGHT - WINDOW_HEIGHT/6.0,
+            4.0 * SCALE_X
+        );
+
+        // Reset game state variables
+        self.score = 0;
+        self.speed_x = 4.0 * SCALE_X;
+        self.speed_x_delta = 4.0 * SCALE_X;
+        self.speed_y = 1.0 * SCALE_Y;
+        self.gravity = 15.0 * SCALE_Y;
+        self.ascent_speed = 0.0;
+        self.collision_counter_on = false;
+
+        Ok(())
     }
 }
 
@@ -255,21 +280,23 @@ impl EventHandler for GameState {
 
     fn key_down_event(
         &mut self,
-        _ctx: &mut Context,
+        ctx: &mut Context,
         input: KeyInput,
         _repeated: bool,
     ) -> GameResult {
         match input.keycode {
             Some(KeyCode::Return) => {
-                if self.state == 0 {
-                    // Reset game state when starting new game
-                    self.state = 1;
-                    self.score = 0;
-                    self.speed_x = 4.0;
-                    self.collision_counter_on = false;
-                } else if self.state == 2 {
-                    // Return to title screen from game over
-                    self.state = 0;
+                match self.state {
+                    0 => {
+                        // Start new game
+                        self.state = 1;
+                        self.reset_game_environment(ctx)?;
+                    },
+                    2 => {
+                        // Return to title screen from game over
+                        self.state = 0;
+                    },
+                    _ => {},
                 }
             },
             Some(KeyCode::A) => {
