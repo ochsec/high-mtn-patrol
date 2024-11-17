@@ -166,6 +166,13 @@ impl EventHandler for GameState {
                 self.background.draw(ctx, &mut canvas)?;
                 self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
 
+                // Draw score
+                let font = graphics::Font::new(ctx, "/zerovelo.ttf")?;
+                let score_display = graphics::Text::new((format!("Score: {}", self.score), font, 32.0));
+                canvas.draw(&score_display, DrawParam::default()
+                    .dest(Vec2::new(20.0, 20.0))
+                    .color(Color::RED));
+
                 // Update and draw boulders
                 for boulder in &mut self.boulders {
                     boulder.update(self.speed_x, self.ascent_speed);
@@ -209,7 +216,21 @@ impl EventHandler for GameState {
                 }
             },
             2 => { // Game over
-                // Draw game over screen
+                self.background.draw(ctx, &mut canvas)?;
+                self.terrain.draw(ctx, &mut canvas, WINDOW_HEIGHT)?;
+                
+                // Draw game over text
+                let font = graphics::Font::new(ctx, "/zerovelo.ttf")?;
+                let game_over = graphics::Text::new(("Game Over", font, 48.0));
+                let score_text = graphics::Text::new((format!("Final Score: {}", self.score), font, 32.0));
+                
+                canvas.draw(&game_over, DrawParam::default()
+                    .dest(Vec2::new(WINDOW_WIDTH/2.0 - 100.0, WINDOW_HEIGHT/3.0))
+                    .color(Color::RED));
+                    
+                canvas.draw(&score_text, DrawParam::default()
+                    .dest(Vec2::new(WINDOW_WIDTH/2.0 - 80.0, WINDOW_HEIGHT/2.0))
+                    .color(Color::WHITE));
             },
             _ => {},
         }
@@ -239,7 +260,14 @@ impl EventHandler for GameState {
         match input.keycode {
             Some(KeyCode::Return) => {
                 if self.state == 0 {
+                    // Reset game state when starting new game
                     self.state = 1;
+                    self.score = 0;
+                    self.speed_x = 4.0;
+                    self.collision_counter_on = false;
+                } else if self.state == 2 {
+                    // Return to title screen from game over
+                    self.state = 0;
                 }
             },
             Some(KeyCode::A) => {
