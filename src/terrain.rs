@@ -21,7 +21,7 @@ impl Bar {
         }
     }
 
-    pub fn update(&mut self, mouse_pos: Vec2, speed_x: f32, ascent: f32) {
+    pub fn update(&mut self, mouse_pos: Vec2, speed_x: f32, ascent: f32, player: &mut Player) {
         self.speed = speed_x;
         self.ascent = ascent;
         self.pos.x -= self.speed;
@@ -31,6 +31,18 @@ impl Bar {
         let half_width = self.width / 2.0;
         if self.pos.x > mouse_pos.x - half_width && self.pos.x < mouse_pos.x + half_width {
             self.pos.y = mouse_pos.y;
+        }
+
+        // Update player terrain tracking
+        let player_x = player.pos.x;
+        let window_width = 640.0; // TODO: Pass this in
+        let check_zone = window_width / 6.0;
+        
+        if self.pos.x < check_zone && self.pos.x > check_zone - window_width/20.0 {
+            player.set_prev_bar_height(self.pos.y);
+        }
+        if self.pos.x > check_zone && self.pos.x < check_zone + window_width/20.0 {
+            player.set_bar_height(self.pos.y);
         }
     }
 

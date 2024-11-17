@@ -11,6 +11,8 @@ pub struct Player {
     pub jump_speed: f32,
     pub move_speed: f32,
     last_y: f32,
+    bar_height: f32,
+    prev_bar_height: f32,
 }
 
 impl Player {
@@ -24,10 +26,12 @@ impl Player {
             jump_speed: -500.0,
             move_speed: 200.0,
             last_y: y,
+            bar_height: y,
+            prev_bar_height: y,
         }
     }
 
-    pub fn update(&mut self, dt: f32, gravity: f32) {
+    pub fn update(&mut self, dt: f32, gravity: f32, speed_x: &mut f32) {
         self.last_y = self.pos.y;
         
         // Apply gravity
@@ -37,6 +41,29 @@ impl Player {
         
         // Update position
         self.pos += self.velocity * dt;
+
+        // Adjust speed based on terrain slope
+        if self.prev_bar_height - self.bar_height > self.height {
+            *speed_x -= 0.01 * (self.prev_bar_height - self.bar_height);
+        } else if self.prev_bar_height <= self.bar_height {
+            *speed_x += 0.03 + 0.01 * (self.bar_height - self.prev_bar_height);
+        }
+
+        // Cap speed
+        if *speed_x < 0.0 {
+            *speed_x = 0.0;
+        }
+        if *speed_x > 20.0 {
+            *speed_x = 20.0;
+        }
+    }
+
+    pub fn set_bar_height(&mut self, height: f32) {
+        self.bar_height = height;
+    }
+
+    pub fn set_prev_bar_height(&mut self, height: f32) {
+        self.prev_bar_height = height;
     }
 
     pub fn jump(&mut self) {

@@ -84,11 +84,11 @@ impl EventHandler for GameState {
                     self.mouse_pos,
                     self.speed_x,
                     self.ascent_speed,
-                    WINDOW_WIDTH
+                    &mut self.player
                 );
 
-                // Update player with gravity
-                self.player.update(ctx.time.delta().as_secs_f32(), self.gravity);
+                // Update player with gravity and terrain physics
+                self.player.update(ctx.time.delta().as_secs_f32(), self.gravity, &mut self.speed_x);
 
                 // Check for keyboard input
                 let keyboard = &ctx.keyboard;
