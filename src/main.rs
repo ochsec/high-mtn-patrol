@@ -240,7 +240,7 @@ fn main() -> GameResult {
         .window_mode(WindowMode::default()
             .dimensions(WINDOW_WIDTH, WINDOW_HEIGHT));
     
-    let (mut ctx, event_loop) = cb.build()?;
-    let mut state = GameState::new(&ctx)?;
+    let (ctx, event_loop) = cb.build()?;
+    let state = GameState::new(&ctx)?;
     ggez::event::run(ctx, event_loop, state)
 }

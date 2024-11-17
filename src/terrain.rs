@@ -1,6 +1,7 @@
 use ggez::{Context, GameResult};
 use ggez::graphics::{self, Color, DrawParam, Rect};
 use glam::Vec2;
+use crate::player::Player;
 
 pub struct Bar {
     pub pos: Vec2,
@@ -91,9 +92,9 @@ impl Terrain {
         }
     }
 
-    pub fn update(&mut self, mouse_pos: Vec2, speed_x: f32, ascent: f32, window_width: f32) {
+    pub fn update(&mut self, mouse_pos: Vec2, speed_x: f32, ascent: f32, player: &mut Player) {
         for bar in &mut self.bars {
-            bar.update(mouse_pos, speed_x, ascent);
+            bar.update(mouse_pos, speed_x, ascent, player);
             
             // Wrap bars around when they go off screen
             if bar.pos.x < -2.0 * self.bar_width {
